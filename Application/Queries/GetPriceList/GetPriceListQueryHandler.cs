@@ -1,13 +1,9 @@
 ﻿using Application.Commons;
 using Domain;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Queries.GetPriceList;
+
 public sealed class GetPriceListQueryHandler : IRequestHandler<GetPriceListQuery, PriceList>
 {
     private readonly IPriceListRepository _priceListRepository;

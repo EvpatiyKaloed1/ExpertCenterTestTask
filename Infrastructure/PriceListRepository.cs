@@ -1,13 +1,9 @@
 ﻿using Application.Commons;
 using Domain;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure;
+
 public class PriceListRepository : IPriceListRepository
 {
     private readonly Database _database;
@@ -26,11 +22,11 @@ public class PriceListRepository : IPriceListRepository
 
     public async Task<List<PriceList>> GetAllPriceListsAsync()
     {
-        return  await _database.PriceList.ToListAsync();
+        return await _database.PriceList.ToListAsync();
     }
 
     public async Task<PriceList> GetPriceListAsync(Guid priceListId)
     {
-        return await _database.PriceList.FirstOrDefaultAsync(x=>x.Id==priceListId);
+        return await _database.PriceList.FirstOrDefaultAsync(x => x.Id == priceListId);
     }
 }

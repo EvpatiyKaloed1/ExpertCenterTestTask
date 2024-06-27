@@ -1,29 +1,27 @@
-﻿    using Domain.Exeptions;
+﻿using Domain.Exeptions;
 
-    namespace Domain.Types;
+namespace Domain.Types;
 
-    public class TextType
+public class TextType
+{
+    public bool? IsExist { get; set; }
+    public List<string?> Value { get; set; }
+
+    public TextType(bool? isExist, List<string?>? value)
     {
-   
-        public bool? IsExist { get; set; }
-        public List<string?> Value { get; set; }
-        public TextType(bool? isExist, List<string?>? value)
-        {
-            Validate(value, isExist);
-            IsExist = isExist;
-            Value = value;
-        }
+        Validate(value, isExist);
+        IsExist = isExist;
+        Value = value;
+    }
 
-        private void Validate(List<string?> value, bool? isExist)
+    private void Validate(List<string?> value, bool? isExist)
+    {
+        foreach (var item in value)
         {
-        
-            foreach (var item in value)
+            if (isExist == null || isExist == false & item != null)
             {
-                if (isExist == null || isExist == false & item!=null)
-                {
-                    throw new ColumnExeption();
-                }
-           
+                throw new ColumnExeption();
             }
         }
     }
+}

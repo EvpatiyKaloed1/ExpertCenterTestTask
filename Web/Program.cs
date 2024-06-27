@@ -1,7 +1,6 @@
 using Application.Commons;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Metadata;
 
 var builder = WebApplication.CreateBuilder(args);
 

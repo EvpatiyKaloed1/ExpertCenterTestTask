@@ -6,6 +6,7 @@ using Domain.Types;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Web.Models;
+
 namespace Web.Controllers;
 
 [Route("PriceList")]
@@ -34,9 +35,10 @@ public class PriceListController : Controller
                                                       new NumberType(x.NumberAsBool(), x.NumberValues),
                                                       new StringType(x.StringAsBool(), x.StringValues),
                                                       new TextType(x.TextAsBool(), x.TextValues))).ToList()));
-   
+
         return RedirectToAction(nameof(Index));
     }
+
     [HttpGet("get-all")]
     public async Task<IActionResult> GetAllPriceLists()
     {
@@ -53,10 +55,11 @@ public class PriceListController : Controller
         };
         return View(viewModel);
     }
+
     [HttpGet("get-price-list")]
-    public async Task<IActionResult> GetPriceList([FromQuery]Guid Id )
+    public async Task<IActionResult> GetPriceList([FromQuery] Guid Id)
     {
-        var priceList= await _sender.Send(new GetPriceListQuery(Id));
+        var priceList = await _sender.Send(new GetPriceListQuery(Id));
         return View(new PriceListViewModel
         {
             Header = priceList.Name,
@@ -66,17 +69,17 @@ public class PriceListController : Controller
                 Header = x.Header,
                 Number = x.Number,
                 IsNumber = x.NumberType.IsExist == true ? "on" : "off",
-                IsString=x.StringType.IsExist == true ? "on" : "off",
-                IsText=x.TextType.IsExist==true ? "on" : "off",
-                NumberValues=x.NumberType.Value,
-                StringValues=x.StringType.Value,   
-                TextValues=x.TextType.Value,
+                IsString = x.StringType.IsExist == true ? "on" : "off",
+                IsText = x.TextType.IsExist == true ? "on" : "off",
+                NumberValues = x.NumberType.Value,
+                StringValues = x.StringType.Value,
+                TextValues = x.TextType.Value,
             }).ToList()
         });
     }
+
     public IActionResult Index()
     {
         return View();
     }
 }
-

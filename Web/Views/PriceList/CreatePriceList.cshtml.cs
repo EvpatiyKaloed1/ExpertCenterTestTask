@@ -8,7 +8,5 @@ namespace Web.Views.PriceList
     {
         [BindProperty]
         public CreatePriceListViewModel Column { get; set; }
-
-        
     }
 }
