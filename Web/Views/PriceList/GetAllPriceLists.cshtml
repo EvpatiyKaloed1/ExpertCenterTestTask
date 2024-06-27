@@ -1,0 +1,39 @@
+﻿@model GetAllPriceListsViewModel
+@{
+}
+
+<table>
+    <tr>
+        <th>Номер</th>
+        <th>Название прайс-листа</th>
+    </tr>
+ 
+    @foreach(var item in Model.Items)
+    {
+        <tr>
+            <td>@item.Number</td>
+            <td><a asp-action="GetPriceList" asp-route-Id="@item.Id">@item.Name</a></td>
+            
+        </tr>
+    }
+</table>
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+</style>
+
+
+
+

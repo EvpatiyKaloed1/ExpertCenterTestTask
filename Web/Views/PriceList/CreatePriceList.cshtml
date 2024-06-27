@@ -1,0 +1,145 @@
+﻿@model CreatePriceListViewModel
+
+@{
+    ViewData["Title"] = "Create Price List";
+}
+
+<div class="container mt-4">
+    <h2>Create Price List</h2>
+    <form asp-action="CreatePriceList" method="post">
+        <div class="form-group">
+            <label asp-for="PriceListName" class="control-label">Название прайс-листа</label>
+            <input asp-for="PriceListName" class="form-control" />
+            <span asp-validation-for="PriceListName" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="PriceListNumber" class="control-label">Номер</label>
+            <input asp-for="PriceListNumber" class="form-control" />
+            <span asp-validation-for="PriceListNumber" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="ProductName" class="control-label">Название продукта</label>
+            <input asp-for="ProductName" class="form-control" />
+            <span asp-validation-for="ProductName" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="ProductCode" class="control-label">Код товара</label>
+            <input asp-for="ProductCode" class="form-control" />
+            <span asp-validation-for="ProductCode" class="text-danger"></span>
+        </div>
+
+        <div id="columns">
+            @for (int i = 0; i < Model.Columns.Count; i++)
+            {
+                <div class="form-group">
+                    <label>Заголовок колонки</label>
+                    <input asp-for="Columns[i].Header" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label>Тип колонки - числовой</label>
+                    <input type="checkbox" asp-for="Columns[i].IsNumber" class="column-type-checkbox" data-column-index="i" />
+                </div>
+                <div class="form-group">
+                    <label>Тип колонки - однострочный</label>
+                    <input type="checkbox" asp-for="Columns[i].IsString" class="column-type-checkbox" data-column-index="i" />
+                </div>
+                <div class="form-group">
+                    <label>Тип колонки - многострочный</label>
+                    <input type="checkbox" asp-for="Columns[i].IsText" class="column-type-checkbox" data-column-index="i" />
+                </div>
+
+                <div class="form-group number-values" data-column-index="i" style="display:none;">
+                    <label>Числовые значения</label>
+                    <input asp-for="Columns[i].NumberValues" class="form-control" />
+                </div>
+                <div class="form-group string-values" data-column-index="i" style="display:none;">
+                    <label>Однострочные значения</label>
+                    <input asp-for="Columns[i].StringValues" class="form-control" />
+                </div>
+                <div class="form-group text-values" data-column-index="i" style="display:none;">
+                    <label>Многострочные значения</label>
+                    <textarea asp-for="Columns[i].TextValues" class="form-control"></textarea>
+                </div>
+            }
+        </div>
+
+        <button type="button" class="btn btn-secondary" id="addColumnButton">Добавить колонку</button>
+        <button type="submit" class="btn btn-primary">Создать</button>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(document).ready(function () {
+            function updateCheckboxesAndFields(index) {
+                var selectedCheckbox = $('input[data-column-index="' + index + '"]:checked');
+                if (selectedCheckbox.length) {
+                    $('input[data-column-index="' + index + '"]').not(':checked').prop('disabled', true);
+                    var selectedType = selectedCheckbox.attr('name').split('.').pop();
+                    $('div[data-column-index="' + index + '"]').hide();
+                    if (selectedType === 'IsNumber') {
+                        $('div.number-values[data-column-index="' + index + '"]').show();
+                    } else if (selectedType === 'IsString') {
+                        $('div.string-values[data-column-index="' + index + '"]').show();
+                    } else if (selectedType === 'IsText') {
+                        $('div.text-values[data-column-index="' + index + '"]').show();
+                    }
+                } else {
+                    $('input[data-column-index="' + index + '"]').prop('disabled', false);
+                    $('div[data-column-index="' + index + '"]').hide();
+                }
+            }
+
+            $('.column-type-checkbox').change(function () {
+                var index = $(this).data('column-index');
+                updateCheckboxesAndFields(index);
+            }).each(function () {
+                var index = $(this).data('column-index');
+                updateCheckboxesAndFields(index);
+            });
+
+            $('#addColumnButton').click(function () {
+                var newIndex = $('#columns .form-group').length/ 7;
+                var newColumnHtml = `
+                            <div class="form-group">
+                                <label>Заголовок колонки</label>
+                                <input name="Columns[${newIndex}].Header" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label>Тип колонки - числовой</label>
+                                <input type="checkbox" name="Columns[${newIndex}].IsNumber" class="column-type-checkbox" data-column-index="${newIndex}" />
+                            </div>
+                            <div class="form-group">
+                                <label>Тип колонки - однострочный</label>
+                                <input type="checkbox" name="Columns[${newIndex}].IsString" class="column-type-checkbox" data-column-index="${newIndex}" />
+                            </div>
+                            <div class="form-group">
+                                <label>Тип колонки - многострочный</label>
+                                <input type="checkbox" name="Columns[${newIndex}].IsText" class="column-type-checkbox" data-column-index="${newIndex}" />
+                            </div>
+                            <div class="form-group number-values" data-column-index="${newIndex}" style="display:none;">
+                                <label>Числовые значения</label>
+                                <input type ="number" name="Columns[${newIndex}].NumberValues"  class="form-control" />
+                            </div>
+                            <div class="form-group string-values" data-column-index="${newIndex}" style="display:none;">
+                                <label>Однострочные значения</label>
+                                <input name="Columns[${newIndex}].StringValues" class="form-control" />
+                            </div>
+                            <div class="form-group text-values" data-column-index="${newIndex}" style="display:none;">
+                                <label>Многострочные значения</label>
+                                <textarea name="Columns[${newIndex}].TextValues" class="form-control"></textarea>
+                            </div>`;
+                $('#columns').append(newColumnHtml);
+
+                $('.column-type-checkbox').off('change').change(function () {
+                    var index = $(this).data('column-index');
+                    updateCheckboxesAndFields(index);
+                });
+            });
+        });
+    </script>
+}

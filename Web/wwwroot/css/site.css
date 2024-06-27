@@ -1,0 +1,31 @@
+body {
+    padding-top: 56px;
+}
+
+footer {
+    padding: 1rem 0;
+    background: #f8f9fa;
+    text-align: center;
+}
+
+.container {
+    max-width: 960px;
+}
+
+h2 {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    font-weight: bold;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #004085;
+    }
