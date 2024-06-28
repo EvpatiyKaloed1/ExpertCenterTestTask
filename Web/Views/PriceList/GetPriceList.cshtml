@@ -1,22 +1,60 @@
 ﻿@model PriceListViewModel
 @{
 }
+<form asp-controller="PriceList" asp-action="DeletePriceList" asp-route-id="@Model.PriceListId" method="post">
+    <input type="submit" class="btn btn-danger" value="Удалить" />
+</form>
+<h1>Прайс лист: @Model.PriceListName</h1>
+<h2>Номер: @Model.PriceListNumber</h2>
 <table>
-    <tr> 
-    @foreach (var item in Model.Columns)
-    {
-        <th>@item.Header</th>
-    }
-    </tr>
-    <tr>
+    
         @foreach(var item in Model.Columns)
         {
-            <tr>
-                <@foreach></>
-            </tr>
+            @if (item.Header.Contains("Название товара") || item.Header.Contains("Код товара"))
+            {
+            <thead>
+            <th>@item.Header</th>
+            </thead>
+            <tbody>
+                @if (item.Header.Contains("Название товара"))
+                {
+                    <td>@item.TextValues.First()</td>
+                }
+                else
+                {
+                    <td>@item.NumberValues.First()</td>
+                }
+            </tbody>   
+            }
         }
-    </tr>
+   
+    @foreach (var item in Model.Columns)
+    {
+        @if (item.Header != "Название товара" & item.Header != "Код товара")
+        {
+            <th>@item.Header</th>
+
+            <tr>
+                @if (item.NumberAsBool())
+                {
+                    <td>@item.NumberValues.First()</td>
+                }
+                @if (item.StringAsBool())
+                {
+                    <td>@item.StringValues.First()</td>
+                }
+                @if (item.TextAsBool())
+                {
+                    <td>@item.TextValues.First()</td>
+                }
+            </tr>
+
+        }
+    }
 </table>
+
+<button type="submit" color ="green" class="btn btn-dark"><a asp-action="AddProduct" asp-route-Id="@Model.PriceListId">Добавить товар</a></button>
+
 <style>
     table {
         width: 100%;

@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Web.Views.PriceList
 {
-    public class GetPriceListModel : PageModel
+    public class AddProductModel : PageModel
     {
         public void OnGet()
         {

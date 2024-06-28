@@ -1,4 +1,7 @@
 ﻿using Application.Commands;
+using Application.Commands.AddProduct;
+using Application.Commands.Create;
+using Application.Commands.Delete;
 using Application.Queries.GetAllPriceLists;
 using Application.Queries.GetPriceList;
 using Domain;
@@ -19,24 +22,32 @@ public class PriceListController : Controller
         _sender = sender;
     }
 
-    [HttpGet("create-price-list")]
-    public IActionResult CreatePriceListStart()
+    [HttpGet]
+    public IActionResult CreatePriceList()
     {
         var model = new CreatePriceListViewModel();
         return View(model);
     }
 
-    [HttpPost("create-price-list")]
-    public async Task<IActionResult> CreatePriceListEnd([FromForm] CreatePriceListViewModel createDto)
+    [HttpPost]
+    public async Task<IActionResult> CreatePriceList([FromForm] CreatePriceListViewModel createDto)
     {
         var priceList = await _sender.Send(new CreatePriceListCommand(createDto.PriceListName, createDto.PriceListNumber, createDto.ProductName, createDto.ProductCode,
-             createDto.Columns.Select(x => new Column(x.Number,
+             createDto.Columns.Select(x => new Column(
                                                       x.Header,
                                                       new NumberType(x.NumberAsBool(), x.NumberValues),
                                                       new StringType(x.StringAsBool(), x.StringValues),
                                                       new TextType(x.TextAsBool(), x.TextValues))).ToList()));
 
-        return RedirectToAction(nameof(Index));
+        return RedirectToAction(nameof(GetAllPriceLists));
+    }
+
+    [HttpPost("delete")]
+    public async Task<IActionResult> DeletePriceList([FromQuery] Guid id)
+    {
+        await _sender.Send(new DeletePriceListCommand(id));
+
+        return RedirectToAction(nameof(GetAllPriceLists));
     }
 
     [HttpGet("get-all")]
@@ -62,12 +73,12 @@ public class PriceListController : Controller
         var priceList = await _sender.Send(new GetPriceListQuery(Id));
         return View(new PriceListViewModel
         {
-            Header = priceList.Name,
-            Number = priceList.Number,
+            PriceListName = priceList.Name,
+            PriceListNumber = priceList.Number,
+            PriceListId = priceList.Id,
             Columns = priceList.Columns.Select(x => new ColumnViewModel
             {
                 Header = x.Header,
-                Number = x.Number,
                 IsNumber = x.NumberType.IsExist == true ? "on" : "off",
                 IsString = x.StringType.IsExist == true ? "on" : "off",
                 IsText = x.TextType.IsExist == true ? "on" : "off",
@@ -78,8 +89,22 @@ public class PriceListController : Controller
         });
     }
 
-    public IActionResult Index()
+    [HttpGet("add-product")]
+    public async Task<IActionResult> AddProduct([FromQuery] Guid id)
     {
-        return View();
+        return View(new AddProductViewModel());
+    }
+
+    [HttpPost("add-product")]
+    public async Task<IActionResult> AddProduct([FromForm] AddProductViewModel addDto, [FromQuery] Guid id)
+    {
+        await _sender.Send(new AddProductCommand(id, addDto.Columns.Select(x => new Column(x.Header,
+                                                                                           new NumberType(x.NumberAsBool(), x.NumberValues),
+                                                                                           new StringType(x.StringAsBool(), x.StringValues),
+                                                                                           new TextType(x.TextAsBool(), x.TextValues))).ToList(),
+                                                                                           addDto.ProductName, 
+                                                                                           addDto.ProductCode));
+
+        return RedirectToAction(nameof(GetPriceList), new { id });
     }
 }

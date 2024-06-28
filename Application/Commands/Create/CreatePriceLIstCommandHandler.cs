@@ -3,7 +3,7 @@ using Domain;
 using Domain.Types;
 using MediatR;
 
-namespace Application.Commands;
+namespace Application.Commands.Create;
 
 public sealed class CreatePriceLIstCommandHandler : IRequestHandler<CreatePriceListCommand, PriceList>
 {
@@ -19,20 +19,20 @@ public sealed class CreatePriceLIstCommandHandler : IRequestHandler<CreatePriceL
         var priceList = new PriceList(request.PriceListNumber,
                                       request.PriceListName,
                                       request.Column);
-        var priceName = new Column(1,
+        var priceName = new Column(
                                    "Название товара",
                                     new NumberType(false, [null]),
                                     new StringType(false, [null]),
                                     new TextType(true, [request.ProductName]));
 
-        var priceCode = new Column(2,
+        var priceCode = new Column(
                                    "Код товара",
                                    new NumberType(true, [request.ProductCode]),
                                    new StringType(false, [null]),
                                    new TextType(false, [null]));
 
         priceList.Columns.AddRange([priceName, priceCode]);
-        var a = await _priceListRepository.CreatePriceListAsync(priceList);
+        await _priceListRepository.CreatePriceListAsync(priceList);
 
         return priceList;
     }

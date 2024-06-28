@@ -6,6 +6,7 @@
     <tr>
         <th>Номер</th>
         <th>Название прайс-листа</th>
+        <th></th>
     </tr>
  
     @foreach(var item in Model.Items)
@@ -13,7 +14,11 @@
         <tr>
             <td>@item.Number</td>
             <td><a asp-action="GetPriceList" asp-route-Id="@item.Id">@item.Name</a></td>
-            
+            <td>
+                <form asp-controller="PriceList" asp-action="DeletePriceList" asp-route-id="@item.Id" method="post">
+                    <input type="submit" class="btn btn-danger" value="Удалить" />
+                </form>
+            </td>
         </tr>
     }
 </table>

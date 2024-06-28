@@ -1,24 +1,15 @@
-﻿@model CreatePriceListViewModel
+﻿@model AddProductViewModel
 
 @{
     ViewData["Title"] = "Create Price List";
 }
 
 <div class="container mt-4">
-    <h2>Создать прайс-лист</h2>
-    <form asp-action="CreatePriceList" method="post">
+    <h2>Добавить товар</h2>
+    <form asp-action="AddProduct" method="post">
+        
         <div class="form-group">
-            <label asp-for="PriceListName" class="control-label">Название прайс-листа</label>
-            <input asp-for="PriceListName" class="form-control" />
-            <span asp-validation-for="PriceListName" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="PriceListNumber" class="control-label">Номер</label>
-            <input asp-for="PriceListNumber" class="form-control" />
-            <span asp-validation-for="PriceListNumber" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="ProductName" class="control-label">Название продукта</label>
+            <label asp-for="ProductName" class="control-label">Название товара</label>
             <input asp-for="ProductName" class="form-control" />
             <span asp-validation-for="ProductName" class="text-danger"></span>
         </div>
@@ -64,10 +55,9 @@
         </div>
 
         <button type="button" class="btn btn-secondary" id="addColumnButton">Добавить колонку</button>
-        <button type="submit" class="btn btn-primary">Создать</button>
+        <button type="submit" class="btn btn-primary" asp-route="@Model.PriceListId" >Создать</button>
     </form>
 </div>
-
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
@@ -103,36 +93,36 @@
             });
 
             $('#addColumnButton').click(function () {
-                var newIndex = $('#columns .form-group').length/ 7;
+                var newIndex = $('#columns .form-group').length / 7;
                 var newColumnHtml = `
-                            <div class="form-group">
-                                <label>Заголовок колонки</label>
-                                <input name="Columns[${newIndex}].Header" class="form-control" />
-                            </div>
-                            <div class="form-group">
-                                <label>Тип колонки - числовой</label>
-                                <input type="checkbox" name="Columns[${newIndex}].IsNumber" class="column-type-checkbox" data-column-index="${newIndex}" />
-                            </div>
-                            <div class="form-group">
-                                <label>Тип колонки - однострочный</label>
-                                <input type="checkbox" name="Columns[${newIndex}].IsString" class="column-type-checkbox" data-column-index="${newIndex}" />
-                            </div>
-                            <div class="form-group">
-                                <label>Тип колонки - многострочный</label>
-                                <input type="checkbox" name="Columns[${newIndex}].IsText" class="column-type-checkbox" data-column-index="${newIndex}" />
-                            </div>
-                            <div class="form-group number-values" data-column-index="${newIndex}" style="display:none;">
-                                <label>Числовые значения</label>
-                                <input type ="number" name="Columns[${newIndex}].NumberValues"  class="form-control" />
-                            </div>
-                            <div class="form-group string-values" data-column-index="${newIndex}" style="display:none;">
-                                <label>Однострочные значения</label>
-                                <input name="Columns[${newIndex}].StringValues" class="form-control" />
-                            </div>
-                            <div class="form-group text-values" data-column-index="${newIndex}" style="display:none;">
-                                <label>Многострочные значения</label>
-                                <textarea name="Columns[${newIndex}].TextValues" class="form-control"></textarea>
-                            </div>`;
+                                    <div class="form-group">
+                                        <label>Заголовок колонки</label>
+                                        <input name="Columns[${newIndex}].Header" class="form-control" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Тип колонки - числовой</label>
+                                        <input type="checkbox" name="Columns[${newIndex}].IsNumber" class="column-type-checkbox" data-column-index="${newIndex}" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Тип колонки - однострочный</label>
+                                        <input type="checkbox" name="Columns[${newIndex}].IsString" class="column-type-checkbox" data-column-index="${newIndex}" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Тип колонки - многострочный</label>
+                                        <input type="checkbox" name="Columns[${newIndex}].IsText" class="column-type-checkbox" data-column-index="${newIndex}" />
+                                    </div>
+                                    <div class="form-group number-values" data-column-index="${newIndex}" style="display:none;">
+                                        <label>Числовые значения</label>
+                                        <input type ="number" name="Columns[${newIndex}].NumberValues"  class="form-control" />
+                                    </div>
+                                    <div class="form-group string-values" data-column-index="${newIndex}" style="display:none;">
+                                        <label>Однострочные значения</label>
+                                        <input name="Columns[${newIndex}].StringValues" class="form-control" />
+                                    </div>
+                                    <div class="form-group text-values" data-column-index="${newIndex}" style="display:none;">
+                                        <label>Многострочные значения</label>
+                                        <textarea name="Columns[${newIndex}].TextValues" class="form-control"></textarea>
+                                    </div>`;
                 $('#columns').append(newColumnHtml);
 
                 $('.column-type-checkbox').off('change').change(function () {

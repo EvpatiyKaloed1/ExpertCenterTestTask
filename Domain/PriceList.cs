@@ -5,7 +5,7 @@ public class PriceList
     public int Number { get; set; }
     public string Name { get; set; }
     public Guid Id { get; set; }
-    public List<Column> Columns { get; set; } = new List<Column>();
+    public List<Column?> Columns { get; set; } = new List<Column>();
 
     private PriceList()
     { }

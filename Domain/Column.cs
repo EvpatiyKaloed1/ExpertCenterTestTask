@@ -5,7 +5,6 @@ namespace Domain;
 
 public class Column
 {
-    public int Number { get; set; }
     public string Header { get; set; }
     public Guid Id { get; set; }
     public NumberType NumberType { get; set; }
@@ -15,10 +14,9 @@ public class Column
     private Column()
     { }
 
-    public Column(int number, string header, NumberType numberType = null, StringType stringType = null, TextType textType = null, Guid? id = null)
+    public Column(string header, NumberType numberType = null, StringType stringType = null, TextType textType = null, Guid? id = null)
     {
         Validate(header, numberType, stringType, textType);
-        Number = number;
         Header = header;
         Id = id ?? Guid.NewGuid();
         NumberType = numberType;

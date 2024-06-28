@@ -20,6 +20,14 @@ public class PriceListRepository : IPriceListRepository
         return priceList;
     }
 
+    public async Task DeleteAsync(PriceList priceList)
+    {
+        _database.Remove(priceList);
+        _database.RemoveRange(priceList.Columns);
+
+        await _database.SaveChangesAsync();
+    }
+
     public async Task<List<PriceList>> GetAllPriceListsAsync()
     {
         return await _database.PriceList.ToListAsync();
@@ -27,6 +35,15 @@ public class PriceListRepository : IPriceListRepository
 
     public async Task<PriceList> GetPriceListAsync(Guid priceListId)
     {
-        return await _database.PriceList.FirstOrDefaultAsync(x => x.Id == priceListId);
+        var priceList = await _database.PriceList
+                                    .Include(p => p.Columns)
+                                    .FirstOrDefaultAsync(x => x.Id == priceListId);
+        return priceList;
+    }
+
+    public async Task UpdatePriceListAsync(PriceList priceList)
+    {
+        _database.Update(priceList);
+        await _database.SaveChangesAsync();
     }
 }
